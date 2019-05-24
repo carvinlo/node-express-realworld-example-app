@@ -14,12 +14,12 @@ var isProduction = process.env.NODE_ENV === 'production';
 // Create global app object
 var app = express();
 
-app.use(cors());
+app.use(cors()); // 跨域响应头
 
 // Normal express config defaults
-app.use(require('morgan')('dev'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(require('morgan')('dev')); // 请求日志
+app.use(bodyParser.urlencoded({ extended: false })); // application/x-www-form-urlencoded parser
+app.use(bodyParser.json()); // application/json parser
 
 app.use(require('method-override')());
 app.use(express.static(__dirname + '/public'));
