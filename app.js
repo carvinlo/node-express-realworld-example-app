@@ -21,13 +21,13 @@ app.use(require('morgan')('dev')); // 请求日志
 app.use(bodyParser.urlencoded({ extended: false })); // application/x-www-form-urlencoded parser
 app.use(bodyParser.json()); // application/json parser
 
-app.use(require('method-override')());
+app.use(require('method-override')()); // 增加请求类型
 app.use(express.static(__dirname + '/public'));
 
-app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
+app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  })); // session 模块，默认存储在内存，跨域无效
 
 if (!isProduction) {
-  app.use(errorhandler());
+  app.use(errorhandler()); // 开发模式下，错误捕捉
 }
 
 if(isProduction){
@@ -37,9 +37,18 @@ if(isProduction){
   mongoose.set('debug', true);
 }
 
+// MongoDB 模式
 require('./models/User');
 require('./models/Article');
 require('./models/Comment');
+
+/* 
+1. ./models/User  数据模式：初始化jwt...
+2. ./routes/api/users  路由，依赖 1.4.5
+3. ./routes/api/articles  路由，依赖 1.4.5
+4. ./routes/auth  从请求头获取并校验jwt
+5. ../config/passport  拦截请求参数获取数据模型
+ */
 require('./config/passport');
 
 app.use(require('./routes'));
