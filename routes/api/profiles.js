@@ -14,6 +14,7 @@ router.param('username', function(req, res, next, username){
   }).catch(next);
 });
 
+// 查看用户的公开信息
 router.get('/:username', auth.optional, function(req, res, next){
   if(req.payload){
     User.findById(req.payload.id).then(function(user){
@@ -26,6 +27,7 @@ router.get('/:username', auth.optional, function(req, res, next){
   }
 });
 
+// 关注其他用户
 router.post('/:username/follow', auth.required, function(req, res, next){
   var profileId = req.profile._id;
 
@@ -38,6 +40,7 @@ router.post('/:username/follow', auth.required, function(req, res, next){
   }).catch(next);
 });
 
+// 取消关注其他用户
 router.delete('/:username/follow', auth.required, function(req, res, next){
   var profileId = req.profile._id;
 

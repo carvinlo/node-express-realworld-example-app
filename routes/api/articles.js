@@ -28,6 +28,7 @@ router.param('comment', function(req, res, next, id) {
   }).catch(next);
 });
 
+// 读取博文列表
 router.get('/', auth.optional, function(req, res, next) {
   var query = {};
   var limit = 20;
@@ -86,6 +87,7 @@ router.get('/', auth.optional, function(req, res, next) {
   }).catch(next);
 });
 
+// 读取时间线
 router.get('/feed', auth.required, function(req, res, next) {
   var limit = 20;
   var offset = 0;

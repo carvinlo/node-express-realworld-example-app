@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var secret = require('../config').secret;
 
+// 为用户数据创建模式
 var UserSchema = new mongoose.Schema({
   username: {type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
   email: {type: String, lowercase: true, unique: true, required: [true, "can't be blank"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
@@ -15,7 +16,10 @@ var UserSchema = new mongoose.Schema({
   salt: String
 }, {timestamps: true});
 
+// 验证用户名和邮箱的唯一性
 UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
+
+/* 辅助方法 */
 
 UserSchema.methods.validPassword = function(password) {
   var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
@@ -53,7 +57,7 @@ UserSchema.methods.toProfileJSONFor = function(user){
   return {
     username: this.username,
     bio: this.bio,
-    image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
+    image: this.image || './img/smiley-cyrus.jpg',
     following: user ? user.isFollowing(this._id) : false
   };
 };
@@ -96,4 +100,5 @@ UserSchema.methods.isFollowing = function(id){
   });
 };
 
+// 注册用户模型
 mongoose.model('User', UserSchema);

@@ -4,6 +4,7 @@ var passport = require('passport');
 var User = mongoose.model('User');
 var auth = require('../auth');
 
+// 请求当前用户的账户信息
 router.get('/user', auth.required, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
@@ -12,6 +13,7 @@ router.get('/user', auth.required, function(req, res, next){
   }).catch(next);
 });
 
+// 修改当前用户的账户信息
 router.put('/user', auth.required, function(req, res, next){
   User.findById(req.payload.id).then(function(user){
     if(!user){ return res.sendStatus(401); }
@@ -39,6 +41,7 @@ router.put('/user', auth.required, function(req, res, next){
   }).catch(next);
 });
 
+// 登录
 router.post('/users/login', function(req, res, next){
   if(!req.body.user.email){
     return res.status(422).json({errors: {email: "can't be blank"}});
@@ -60,6 +63,7 @@ router.post('/users/login', function(req, res, next){
   })(req, res, next);
 });
 
+// 注册
 router.post('/users', function(req, res, next){
   var user = new User();
 
